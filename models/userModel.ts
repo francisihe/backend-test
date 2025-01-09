@@ -1,7 +1,16 @@
 import sequelize from "../config/db";
-import { DataTypes } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
+import { IUser } from '../types/userTypes';
 
-const User = sequelize.define("User", {
+interface UserAttributes extends IUser {
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
+
+// const User = sequelize.define("User", {
+const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>('User', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,

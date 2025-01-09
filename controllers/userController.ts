@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import User from '../models/userModel';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import bcryptjs from 'bcryptjs';
+
+import { NODE_ENV, JWT_SECRET } from '../config/constants';
+
+import { IUser } from '../types/userTypes';
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -28,6 +32,68 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         res.status(400).json({
             status: false,
             message: 'Unable to create user',
+            error: error.message,
+        });
+    }
+}
+
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ where: { email } }) as IUser | null;
+
+        if (!user) {
+            res.status(401).json({
+                status: false,
+                message: 'Invalid credentials. Please try again',
+            });
+            return;
+        }
+
+        const isPasswordValid = bcryptjs.compareSync(password, user.password);
+        if (!isPasswordValid) {
+            res.status(401).json({
+                status: false,
+                message: 'Invalid credentials. Please try again',
+            });
+            return;
+        }
+
+        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: NODE_ENV === 'production',
+            sameSite: 'strict',
+        });
+
+        res.status(200).json({
+            status: true,
+            message: 'User has been logged in'
+        });
+
+    } catch (error: any) {
+        res.status(500).json({
+            status: false,
+            message: 'Unable to login user',
+            error: error.message,
+        });
+    }
+};
+
+export const logoutUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        res.clearCookie('token');
+
+        res.status(200).json({
+            status: true,
+            message: 'User has been logged out'
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            status: false,
+            message: 'Unable to logout user',
             error: error.message,
         });
     }
