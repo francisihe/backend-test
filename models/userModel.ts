@@ -1,3 +1,4 @@
+import { time } from "console";
 import sequelize from "../config/db";
 import { DataTypes } from "sequelize";
 
@@ -20,6 +21,8 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: false,
     },
+}, {
+    timestamps: true,
 });
 
 export default User;
