@@ -2,12 +2,17 @@ import express from 'express';
 import sequelize from './config/db';
 import { NODE_ENV, PORT } from './config/constants';
 
+import userRouter from './routes/userRouter';
+
 const app = express();
 app.use(express.json());
 
 app.get('/', (req, res) => {
     res.json('Rise API is running...');
 });
+
+// Routes
+app.use('/api/v1/users', userRouter);
 
 async function startServer() {
     try {
