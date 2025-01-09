@@ -2,6 +2,8 @@ import express from 'express';
 import sequelize from './config/db';
 import { NODE_ENV, PORT } from './config/constants';
 
+import { runMigrations } from './config/runMigrations';
+
 import userRouter from './routes/userRouter';
 
 const app = express();
@@ -18,6 +20,9 @@ async function startServer() {
     try {
         await sequelize.authenticate();
         console.log('Database connection has been established successfully...');
+
+        // Run migrations
+        await runMigrations();
         
         app.listen(PORT, () => {
             console.log(`Server environment is ${NODE_ENV}`);
