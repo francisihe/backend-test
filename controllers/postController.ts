@@ -25,12 +25,27 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
 
 export const getPosts = async (req: Request, res: Response): Promise<void> => {
     try {
-        const posts = await Post.findAll();
+
+        const { page = 1, limit = 10 } = req.query;
+        const offset = (Number(page) - 1) * Number(limit);
+
+        const posts = await Post.findAll({
+            limit: Number(limit),
+            offset: offset,
+        });
+
+        const totalPosts = await Post.count();
 
         res.status(200).json({
             status: true,
             message: "Posts have been retrieved",
-            data: posts
+            data: posts,
+            meta: {
+                total: totalPosts,
+                page: Number(page),
+                limit: Number(limit),
+                totalPages: Math.ceil(totalPosts / Number(limit)),
+            },
         });
     } catch (error: any) {
         res.status(400).json({

@@ -58,6 +58,26 @@ export const validateCreatePost = (req: Request, res: Response, next: NextFuncti
 
 }
 
+export const validateGetPosts = (req: Request, res: Response, next: NextFunction) => {
+    const schema = Joi.object({
+        page: Joi.number().integer().min(1).default(1),
+        limit: Joi.number().integer().min(1).max(100).default(10),
+    });
+
+    const { error, value } = schema.validate(req.query);
+    if (error) {
+        res.status(400).json({
+            status: false,
+            message: error.details[0].message
+        });
+        return;
+    };
+
+    req.query = value;
+    next();
+
+}
+
 export const validateGetPostById = (req: Request, res: Response, next: NextFunction) => {
     const schema = Joi.object({
         postId: Joi.number().required()
