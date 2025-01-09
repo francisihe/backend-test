@@ -5,6 +5,8 @@ import bcryptjs from 'bcryptjs';
 
 import { NODE_ENV, JWT_SECRET } from '../config/constants';
 
+import Post from '../models/postModel';
+
 import { IUser } from '../types/userTypes';
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
@@ -98,3 +100,43 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
         });
     }
 }
+
+export const getUserPosts = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params; 
+
+        const user = await User.findByPk(id);
+        
+        if (!user) {
+            res.status(404).json({
+                status: false,
+                message: 'User not found',
+            });
+            return;
+        }
+
+        const posts = await Post.findAll({
+            where: { userId: id },
+        });
+
+        if (!posts.length) {
+            res.status(404).json({
+                status: false,
+                message: "No posts found for this user",
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: true,
+            message: 'User\'s posts have been retrieved',
+            data: posts
+        });
+    } catch (error: any) {
+        res.status(400).json({
+            status: false,
+            message: 'Unable to retrieve user posts',
+            error: error.message,
+        });
+    }
+};
