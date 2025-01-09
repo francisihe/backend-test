@@ -57,3 +57,40 @@ export const validateCreatePost = (req: Request, res: Response, next: NextFuncti
     next();
 
 }
+
+export const validateGetPostById = (req: Request, res: Response, next: NextFunction) => {
+    const schema = Joi.object({
+        postId: Joi.number().required()
+    });
+
+    const { error } = schema.validate(req.params);
+    if (error) {
+        res.status(400).json({
+            status: false,
+            message: error.details[0].message
+        });
+        return;
+    };
+
+    next();
+
+}
+
+export const validateUpdatePost = (req: Request, res: Response, next: NextFunction) => {
+        
+    const schema = Joi.object({
+        body: Joi.string().min(1).required()
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        res.status(400).json({
+            status: false,
+            message: error.details[0].message
+        });
+        return;
+    };
+
+    next();
+
+}

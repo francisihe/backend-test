@@ -1,13 +1,16 @@
 import express from 'express';
 import sequelize from './config/db';
+import cookieParser from 'cookie-parser';
 import { NODE_ENV, PORT } from './config/constants';
 
 import { runMigrations } from './config/runMigrations';
 
 import userRouter from './routes/userRouter';
+import postRouter from './routes/postRouter';
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
     res.json('Rise API is running...');
@@ -15,6 +18,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/posts', postRouter);
 
 async function startServer() {
     try {

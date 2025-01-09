@@ -1,9 +1,17 @@
 import sequelize from "../config/db";
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
+import { IPost } from "../types/postTypes";
 
 import User from "./userModel";
 
-const Post = sequelize.define("Post", {
+interface PostAttributes extends IPost {
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+interface PostCreationAttributes extends Omit<PostAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
+
+const Post = sequelize.define<Model<PostAttributes, PostCreationAttributes>>("Post", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
