@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Post from "../models/postModel";
+import User from "../models/userModel";
+import { IUser } from "../types/userTypes";
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -26,15 +28,33 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
 export const getPosts = async (req: Request, res: Response): Promise<void> => {
     try {
 
-        const { page = 1, limit = 10 } = req.query;
+        const { page = 1, limit = 10, username } = req.query;
         const offset = (Number(page) - 1) * Number(limit);
 
+        let where: any = {};
+
+        // If username is provided, get the user's ID
+        if (username) {
+            const username = Array.isArray(req.query.username) ? req.query.username[0] : req.query.username;
+            const user = await User.findOne({ where: { username } }) as unknown as IUser;
+
+            if (!user) {
+                res.status(404).json({
+                    status: false,
+                    message: `User with username "${username}" not found`,
+                });
+                return;
+            }
+            where.userId = user.id;
+        }
+
         const posts = await Post.findAll({
+            where,
             limit: Number(limit),
-            offset: offset,
+            offset,
         });
 
-        const totalPosts = await Post.count();
+        const totalPosts = await Post.count({ where });
 
         res.status(200).json({
             status: true,

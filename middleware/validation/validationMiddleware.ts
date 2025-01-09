@@ -62,6 +62,7 @@ export const validateGetPosts = (req: Request, res: Response, next: NextFunction
     const schema = Joi.object({
         page: Joi.number().integer().min(1).default(1),
         limit: Joi.number().integer().min(1).max(100).default(10),
+        username: Joi.string().optional().min(1)
     });
 
     const { error, value } = schema.validate(req.query);
