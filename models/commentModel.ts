@@ -23,4 +23,7 @@ export const Comment = sequelize.define("Comment", {
     },
 });
 
+Comment.belongsTo(Post, { foreignKey: 'postId' });
+Post.hasMany(Comment, { foreignKey: 'postId' });
+
 export default Comment;
