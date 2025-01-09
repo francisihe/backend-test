@@ -1,4 +1,3 @@
-import { time } from "console";
 import sequelize from "../config/db";
 import { DataTypes } from "sequelize";
 
