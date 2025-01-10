@@ -8,6 +8,6 @@ router.route('/').post(validateCreateUser, createUser);
 router.route('/login').post(validateUserLogin, loginUser);
 router.route('/logout').get(logoutUser);
 
-router.route('/:id/posts').get(getUserPosts)
+router.route('/:userId/posts').get(getUserPosts)
 
 export default router;
