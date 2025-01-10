@@ -179,3 +179,25 @@ export const validateGetUserComments = (req: Request, res: Response, next: NextF
     next();
 
 }
+
+export const validateCustomQuery = (req: Request, res: Response, next: NextFunction) => {
+    
+    const schema = Joi.object({
+        body: Joi.object({
+            query: Joi.string()
+                .required().min(1).max(5000)
+                .regex(/^select/i).message('Only SELECT queries are allowed')
+        })
+    });
+
+    
+    const { error } = schema.validate(req);
+    if (error) {
+        res.status(400).json({
+            status: false,
+            message: error.details[0].message
+        });
+        return;
+    }
+    next();
+};
