@@ -2,7 +2,7 @@
   "name": "rise-backend-test-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --runInBand",
     "create-migration:dev": "ts-node scripts/createMigration.ts",
