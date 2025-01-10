@@ -8,6 +8,7 @@ import { runMigrations } from './config/runMigrations';
 import userRouter from './routes/userRouter';
 import postRouter from './routes/postRouter';
 import commentRouter from './routes/commentRouter';
+import healthRouter from './routes/healthRouter';
 
 const app = express();
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(cookieParser());
 app.get('/', (req, res) => {
     res.json('Rise API is running...');
 });
+app.get('/health', healthRouter);
 
 // Routes
 app.use('/api/v1/users', userRouter);
