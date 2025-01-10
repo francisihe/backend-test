@@ -27,14 +27,14 @@ app.use('/api/v1/comments', commentRouter);
 async function startServer() {
     try {
         await sequelize.authenticate();
-        console.log('Database connection has been established successfully...');
+        console.info('Database connection has been established successfully...');
 
         // Run migrations -- Moved migrations to run during build in prod, and in scripts/runMigration.ts in dev to avoid running migrations on every server start
         // await runMigrations();
         
         app.listen(PORT, () => {
-            console.log(`Server environment is ${NODE_ENV}`);
-            console.log(`Server is running on http://localhost:${PORT}`);
+            console.info(`Server environment is ${NODE_ENV}`);
+            console.info(`Server is running on http://localhost:${PORT}`);
         });
 
     } catch (error) {
