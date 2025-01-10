@@ -1,14 +1,14 @@
 import express from 'express';
 const router = express.Router();
 
-import { verifyUser } from '../middleware/authentication/verifyUser';
+// import { verifyUser } from '../middleware/authentication/verifyUser';
 
 import { validateCreatePost, validateGetPosts, validateGetPostById, validateUpdatePost, validateAddComment } from '../middleware/validation/validationMiddleware';
 import { createPost, getPosts, getPostById, updatePost, deletePost } from '../controllers/postController';
 
 import { addComment, getCommentsOnPost } from '../controllers/commentController';
 
-router.use(verifyUser)
+// router.use(verifyUser) // Moved to index.ts
 
 router.route('/').post(validateCreatePost, createPost)
 router.route('/').get(validateGetPosts, getPosts);

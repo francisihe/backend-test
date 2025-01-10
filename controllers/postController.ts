@@ -7,6 +7,7 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
     try {
 
         const userId = req.user?.id;
+        console.log('User ID in create post', userId);
         const { title, content } = req.body;
 
         const post = await Post.create({ title, content, userId });
@@ -14,7 +15,7 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
         res.status(201).json({
             status: true,
             message: "Post has been created",
-            data: { post },
+            data: post,
         });
     } catch (error: any) {
         res.status(400).json({
