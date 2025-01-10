@@ -10,6 +10,7 @@ import postRouter from './routes/postRouter';
 import commentRouter from './routes/commentRouter';
 import healthRouter from './routes/healthRouter';
 import customRouter from './routes/customRouter';
+import seedRouter from './routes/seedRouter';
 import { verifyUser } from './middleware/authentication/verifyUser';
 
 const app = express();
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
 });
 
 // Routes
+app.use('/seed-database', seedRouter);
 app.use('/health', healthRouter);
 app.use('/custom-query', customRouter);
 app.use('/api/v1/users', userRouter);
