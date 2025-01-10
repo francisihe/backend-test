@@ -7,6 +7,7 @@ import { runMigrations } from './config/runMigrations';
 
 import userRouter from './routes/userRouter';
 import postRouter from './routes/postRouter';
+import commentRouter from './routes/commentRouter';
 
 const app = express();
 app.use(express.json());
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
+app.use('/api/v1/comments', commentRouter);
 
 async function startServer() {
     try {
