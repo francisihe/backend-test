@@ -7,9 +7,9 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
     try {
 
         const userId = req.user?.id;
-        const { body } = req.body;
+        const { title, content } = req.body;
 
-        const post = await Post.create({ body, userId });
+        const post = await Post.create({ title, content, userId });
 
         res.status(201).json({
             status: true,
@@ -116,7 +116,7 @@ export const updatePost = async (req: Request, res: Response): Promise<void> => 
     try {
         const { postId } = req.params;
         const userId = req.user?.id;
-        const { body } = req.body;
+        const { title, content } = req.body;
 
         const post = await Post.findByPk(postId);
 
@@ -128,7 +128,7 @@ export const updatePost = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
-        await post.update({ body, userId });
+        await post.update({ title, content, userId });
 
         res.status(200).json({
             status: true,

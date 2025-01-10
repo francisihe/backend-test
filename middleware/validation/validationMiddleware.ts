@@ -43,7 +43,8 @@ export const validateUserLogin = (req: Request, res: Response, next: NextFunctio
 
 export const validateCreatePost = (req: Request, res: Response, next: NextFunction) => {
     const schema = Joi.object({
-        body: Joi.string().min(1).required(),
+        title: Joi.string().min(3).required(),
+        content: Joi.string().min(3).required(),
     });
 
     const { error } = schema.validate(req.body);
@@ -101,7 +102,8 @@ export const validateGetPostById = (req: Request, res: Response, next: NextFunct
 export const validateUpdatePost = (req: Request, res: Response, next: NextFunction) => {
         
     const schema = Joi.object({
-        body: Joi.string().min(1).required()
+        title: Joi.string().min(3).required(),
+        content: Joi.string().min(1).required()
     });
 
     const { error } = schema.validate(req.body);

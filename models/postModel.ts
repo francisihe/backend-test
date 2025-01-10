@@ -17,7 +17,11 @@ const Post = sequelize.define<Model<PostAttributes, PostCreationAttributes>>("Po
         autoIncrement: true,
         primaryKey: true,
     },
-    body: {
+    title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    content: {
         type: DataTypes.STRING,
         allowNull: false,
     },
