@@ -2,17 +2,17 @@ import request from 'supertest';
 import app from '../index';
 import sequelize from '../config/db';
 
-beforeAll(async () => {
-    try {
-        await sequelize.sync({ force: true });
-    } catch (error) {
-        console.error('Database sync error:', error);
-    }
-});
+// beforeAll(async () => {
+//     try {
+//         await sequelize.sync({ force: true });
+//     } catch (error) {
+//         console.error('Database sync error:', error);
+//     }
+// });
 
-afterAll(async () => {
-    await sequelize.close();
-});
+// afterAll(async () => {
+//     await sequelize.close();
+// });
 
 describe('Post Creation Without Auth', () => {
     it('should not create post without auth', async () => {
@@ -88,7 +88,7 @@ describe('Post Creation With Auth, CRUD operations', () => {
         expect(response.body.status).toBe(true);
         expect(response.body.data).toBeInstanceOf(Array);
     });
-    
+
 });
 
 describe('Post CRUD operations with postId', () => {
@@ -155,6 +155,14 @@ describe('Post CRUD operations with postId', () => {
         expect(response.body.status).toBe(true);
     });
 
+it('should not update post without auth', async () => {
+    const response = await request(app)
+        .put(`/api/v1/posts/${postId1}`)
+        .send({ title: 'Updated title', content: 'Updated content' });
+
+    expect(response.status).toBe(401);
+});
+
     it('should delete post 2', async () => {
         const response = await request(app)
             .delete(`/api/v1/posts/${postId2}`)
@@ -170,4 +178,84 @@ describe('Post CRUD operations with postId', () => {
 
         expect(response.status).toBe(401);
     });
+});
+
+
+describe('Post - check valid parameters', () => {
+    let cookie: string;
+
+    beforeEach(async () => {
+        await sequelize.sync({ force: true });
+
+        // Create user in the database
+        await request(app)
+            .post('/api/v1/users')
+            .send({
+                username: 'existinguser',
+                name: 'Existing User',
+                email: 'existinguser@gmail.com',
+                password: 'password',
+            });
+
+        // Login the user created
+        const response = await request(app)
+            .post('/api/v1/users/login')
+            .send({
+                email: 'existinguser@gmail.com',
+                password: 'password',
+            });
+
+        cookie = response.headers['set-cookie'];
+    });
+
+    it('should not update post with invalid id', async () => {
+        const response = await request(app)
+            .patch(`/api/v1/posts/invalidId`)
+            .set('Cookie', [cookie])
+            .send({ title: 'Updated title', content: 'Updated content' });
+
+        expect(response.status).toBe(400);
+    });
+
+    it('should not get post with invalid id', async () => {
+        const response = await request(app)
+            .get(`/api/v1/posts/invalidId`)
+            .set('Cookie', [cookie]);
+
+        expect(response.status).toBe(400);
+    });
+
+    it('should not delete post with invalid id', async () => {
+        const response = await request(app)
+            .delete(`/api/v1/posts/invalidId`)
+            .set('Cookie', [cookie]);
+
+        expect(response.status).toBe(400);
+    });
+
+    it('should not get post that does not exist', async () => {
+        const response = await request(app)
+            .get(`/api/v1/posts/99999`)
+            .set('Cookie', [cookie]);
+
+        expect(response.status).toBe(404);
+    });
+
+    it('should not update post that does not exist', async () => {
+        const response = await request(app)
+            .put(`/api/v1/posts/99999`)
+            .set('Cookie', [cookie])
+            .send({ title: 'Updated title', content: 'Updated content' });
+
+        expect(response.status).toBe(404);
+    });
+
+    it('should not delete post that does not exist', async () => {
+        const response = await request(app)
+            .delete(`/api/v1/posts/99999`)
+            .set('Cookie', [cookie]);
+
+        expect(response.status).toBe(404);
+    });
+
 });

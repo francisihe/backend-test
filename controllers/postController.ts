@@ -7,7 +7,6 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
     try {
 
         const userId = req.user?.id;
-        console.log('User ID in create post', userId);
         const { title, content } = req.body;
 
         const post = await Post.create({ title, content, userId });
@@ -116,6 +115,7 @@ export const getPostById = async (req: Request, res: Response): Promise<void> =>
 export const updatePost = async (req: Request, res: Response): Promise<void> => {
     try {
         const { postId } = req.params;
+        
         const userId = req.user?.id;
         const { title, content } = req.body;
 

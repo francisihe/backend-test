@@ -1,32 +1,31 @@
 import request from 'supertest';
-import { response, Response } from 'express';
 import app from '../index';
 import sequelize from '../config/db';
 
+beforeAll(async () => {
+    try {
+        await sequelize.sync({ force: true });
+
+        // Create user in the database for login test
+        await request(app)
+            .post('/api/v1/users')
+            .send({
+                username: 'existinguser',
+                name: 'Existing User',
+                email: 'existinguser@gmail.com',
+                password: 'password',
+            });
+
+    } catch (error) {
+        console.error('Database sync error:', error);
+    }
+});
+
+afterAll(async () => {
+    await sequelize.close();
+});
+
 describe('User Login And Creation', () => {
-
-    beforeAll(async () => {
-        try {
-            await sequelize.sync({ force: true });
-
-            // Create user in the database for login test
-            await request(app)
-                .post('/api/v1/users')
-                .send({
-                    username: 'existinguser',
-                    name: 'Existing User',
-                    email: 'existinguser@gmail.com',
-                    password: 'password',
-                });
-
-        } catch (error) {
-            console.error('Database sync error:', error);
-        }
-    });
-
-    afterAll(async () => {
-        await sequelize.close();
-    });
 
     const newUser1 = {
         username: 'newuser1',
@@ -34,13 +33,6 @@ describe('User Login And Creation', () => {
         email: 'newuser1@gmail.com',
         password: 'password',
     };
-
-    // const newUser2 = {
-    //     username: 'newuser2',
-    //     name: 'New User 2',
-    //     email: 'newuser2@gmail.com',
-    //     password: 'password',
-    // };
 
     it('should create a new user', async () => {
         const response = await request(app)
@@ -122,22 +114,11 @@ describe('User Login And Creation', () => {
 
 describe('User Cookie Cleared', () => {
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         try {
-            await sequelize.sync({ force: true });
-
-            // Create user in the database for login test
-            await request(app)
-                .post('/api/v1/users')
-                .send({
-                    username: 'existinguser',
-                    name: 'Existing User',
-                    email: 'existinguser@gmail.com',
-                    password: 'password',
-                });
 
             // Login the user
-            const response = await request(app)
+            await request(app)
                 .post('/api/v1/users/login')
                 .send({
                     email: 'existinguser@gmail.com',
