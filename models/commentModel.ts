@@ -18,7 +18,7 @@ export const Comment = sequelize.define<Model<CommentAttributes, CommentCreation
         autoIncrement: true,
         primaryKey: true,
     },
-    body: {
+    content: {
         type: DataTypes.STRING,
         allowNull: false,
     },

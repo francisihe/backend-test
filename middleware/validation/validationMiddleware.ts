@@ -121,7 +121,7 @@ export const validateUpdatePost = (req: Request, res: Response, next: NextFuncti
 
 export const validateAddComment = (req: Request, res: Response, next: NextFunction) => {
     const schema = Joi.object({
-        body: Joi.string().min(1).required()
+        content: Joi.string().min(1).required()
     });
 
     const { error } = schema.validate(req.body);

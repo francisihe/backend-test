@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import Comment from "../models/commentModel";
 import Post from "../models/postModel";
-import { IComment } from "../types/commentTypes";
 
 export const addComment = async (req: Request, res: Response): Promise<void> => {
     try {
         const { postId } = req.params;
-        const { body } = req.body; 
+        const { content } = req.body; 
         const userId = req.user?.id;
 
         const postIdNumber = Number(postId);
@@ -27,7 +26,7 @@ export const addComment = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
-        const comment = await Comment.create({ body, postId: postIdNumber, userId });
+        const comment = await Comment.create({ content, postId: postIdNumber, userId });
 
         res.status(201).json({
             status: true,
