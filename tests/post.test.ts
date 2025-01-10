@@ -52,7 +52,6 @@ describe('Post Creation With Auth, CRUD operations', () => {
                 password: 'password',
             });
 
-        console.log(response.body);
         cookie = response.headers['set-cookie'];
     });
 
@@ -92,121 +91,83 @@ describe('Post Creation With Auth, CRUD operations', () => {
     
 });
 
+describe('Post CRUD operations with postId', () => {
+    let cookie: string;
+    let postId1: number;
+    let postId2: number;
 
+    beforeEach(async () => {
+        await sequelize.sync({ force: true });
 
+        // Create user in the database
+        await request(app)
+            .post('/api/v1/users')
+            .send({
+                username: 'existinguser',
+                name: 'Existing User',
+                email: 'existinguser@gmail.com',
+                password: 'password',
+            });
 
+        // Login the user created
+        const response = await request(app)
+            .post('/api/v1/users/login')
+            .send({
+                email: 'existinguser@gmail.com',
+                password: 'password',
+            });
 
+        cookie = response.headers['set-cookie'];
 
-//     it('should get posts', async () => {
-//         const response = await request(app)
-//             .get('/api/v1/posts');
+        // Create two posts
+        const testPost1 = await request(app)
+            .post('/api/v1/posts')
+            .set('Cookie', [cookie])
+            .send({ title: 'Test Post 1', content: 'This is a test post content for post 2' });
 
-//         expect(response.status).toBe(200);
-//         expect(response.body.status).toBe(true);
-//         expect(response.body.data).toBeInstanceOf(Array);
-//     });
+        postId1 = testPost1.body.data.id;
 
-//     it('should get user posts', async () => {
-//         const response = await request(app)
-//             .get('/api/v1/posts')
-//             .set('Cookie', [cookie]);
+        const testPost2 = await request(app)
+            .post('/api/v1/posts')
+            .set('Cookie', [cookie])
+            .send({ title: 'Test Post 2', content: 'This is a test post content for post 2' });
 
-//         expect(response.status).toBe(200);
-//         expect(response.body.status).toBe(true);
-//         expect(response.body.data).toBeInstanceOf(Array);
-//     });
+        postId2 = testPost2.body.data.id;
+    });
 
-//     it('should get post by id', async () => {
-//         const response = await request(app)
-//             .get(`/api/v1/posts/${postId}`);
+    it('should get post by id', async () => {
+        const response = await request(app)
+            .get(`/api/v1/posts/${postId1}`)
+            .set('Cookie', [cookie]);
 
-//         expect(response.status).toBe(200);
-//         expect(response.body.status).toBe(true);
-//         expect(response.body.data).toHaveProperty('id');
-//     });
+        expect(response.status).toBe(200);
+        expect(response.body.status).toBe(true);
+        expect(response.body.data).toHaveProperty('id');
+    });
 
-//     it('should update post', async () => {
-//         const response = await request(app)
-//             .put(`/api/v1/posts/${postId}`)
-//             .set('Cookie', [cookie])
-//             .send({ title: 'Updated title', content: 'Updated content' });
+    it('should update post', async () => {
+        const response = await request(app)
+            .patch(`/api/v1/posts/${postId1}`)
+            .set('Cookie', [cookie])
+            .send({ title: 'Updated title', content: 'Updated content' });
 
-//         expect(response.status).toBe(200);
-//         expect(response.body.status).toBe(true);
-//     });
+        expect(response.status).toBe(200);
+        expect(response.body.status).toBe(true);
+    });
 
-//     it('should delete post', async () => {
-//         const response = await request(app)
-//             .delete(`/api/v1/posts/${postId}`)
-//             .set('Cookie', [cookie]);
+    it('should delete post 2', async () => {
+        const response = await request(app)
+            .delete(`/api/v1/posts/${postId2}`)
+            .set('Cookie', [cookie]);
 
-//         expect(response.status).toBe(200);
-//         expect(response.body.status).toBe(true);
-//     });
+        expect(response.status).toBe(200);
+        expect(response.body.status).toBe(true);
+    });
 
-//     it('should not delete post without auth', async () => {
-//         const response = await request(app)
-//             .delete(`/api/v1/posts/${postId}`);
+    it('should not delete post without auth', async () => {
+        const response = await request(app)
+            .delete(`/api/v1/posts/${postId1}`);
 
-//         expect(response.status).toBe(401);
-//     });
-
-//     it('should not update post without auth', async () => {
-//         const response = await request(app)
-//             .put(`/api/v1/posts/${postId}`)
-//             .send({ title: 'Updated title', content: 'Updated content' });
-
-//         expect(response.status).toBe(401);
-//     });
-
-//     it('should not update post with invalid id', async () => {
-//         const response = await request(app)
-//             .put(`/api/v1/posts/invalidId`)
-//             .set('Cookie', [cookie])
-//             .send({ title: 'Updated title', content: 'Updated content' });
-
-//         expect(response.status).toBe(400);
-//     });
-
-//     it('should not get post with invalid id', async () => {
-//         const response = await request(app)
-//             .get(`/api/v1/posts/invalidId`);
-
-//         expect(response.status).toBe(400);
-//     });
-
-//     it('should not delete post with invalid id', async () => {
-//         const response = await request(app)
-//             .delete(`/api/v1/posts/invalidId`)
-//             .set('Cookie', [cookie]);
-
-//         expect(response.status).toBe(400);
-//     });
-
-//     it('should not get post that does not exist', async () => {
-//         const response = await request(app)
-//             .get(`/api/v1/posts/99999`);
-
-//         expect(response.status).toBe(404);
-//     });
-
-//     it('should not update post that does not exist', async () => {
-//         const response = await request(app)
-//             .put(`/api/v1/posts/99999`)
-//             .set('Cookie', [cookie])
-//             .send({ title: 'Updated title', content: 'Updated content' });
-
-//         expect(response.status).toBe(404);
-//     });
-
-//     it('should not delete post that does not exist', async () => {
-//         const response = await request(app)
-//             .delete(`/api/v1/posts/99999`)
-//             .set('Cookie', [cookie]);
-
-//         expect(response.status).toBe(404);
-//     });
-
-// });
-
-
+        expect(response.status).toBe(401);
+    });
+});
