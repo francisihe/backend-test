@@ -83,7 +83,7 @@ export const validateGetPosts = (req: Request, res: Response, next: NextFunction
 
 export const validateGetPostById = (req: Request, res: Response, next: NextFunction) => {
     const schema = Joi.object({
-        postId: Joi.number().required()
+        postId: Joi.number().integer().positive().required()
     });
 
     const { error } = schema.validate(req.params);
@@ -100,13 +100,21 @@ export const validateGetPostById = (req: Request, res: Response, next: NextFunct
 }
 
 export const validateUpdatePost = (req: Request, res: Response, next: NextFunction) => {
-        
     const schema = Joi.object({
-        title: Joi.string().min(3).required(),
-        content: Joi.string().min(1).required()
+        params: Joi.object({
+            postId: Joi.number().integer().positive().required()
+        }),
+        body: Joi.object({
+            title: Joi.string().min(3).required(),
+            content: Joi.string().min(1).required()
+        })
     });
 
-    const { error } = schema.validate(req.body);
+    const { error } = schema.validate({
+        params: req.params,
+        body: req.body
+    });
+
     if (error) {
         res.status(400).json({
             status: false,
@@ -116,8 +124,7 @@ export const validateUpdatePost = (req: Request, res: Response, next: NextFuncti
     };
 
     next();
-
-}
+};
 
 export const validateAddComment = (req: Request, res: Response, next: NextFunction) => {
     const schema = Joi.object({
