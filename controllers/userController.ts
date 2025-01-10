@@ -11,7 +11,7 @@ import { IUser } from '../types/userTypes';
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { username, email, password } = req.body;
+        const { username, name, email, password } = req.body;
 
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
@@ -23,7 +23,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         }
 
         const hashedPassword = bcryptjs.hashSync(password, 10);
-        const user = await User.create({ username, email, password: hashedPassword });
+        const user = await User.create({ username, name, email, password: hashedPassword });
 
         res.status(201).json({
             status: true,
