@@ -1,10 +1,16 @@
 import request from 'supertest';
 import app from '../index';
 import sequelize from '../config/db';
+import { runMigrations } from "../config/runMigrations";
+import { Transaction } from 'sequelize';
+
+let transaction: Transaction;
 
 beforeAll(async () => {
     try {
-        await sequelize.sync({ force: true });
+        // await sequelize.authenticate();
+        await runMigrations();
+        // await sequelize.sync({ force: true });
 
         // Create user in the database for login test
         await request(app)
@@ -21,7 +27,25 @@ beforeAll(async () => {
     }
 });
 
+beforeEach(async () => {
+    // Start a new transaction for each test suite
+    transaction = await sequelize.transaction();
+});
+
+afterEach(async () => {
+    // Rollback the transaction after each test suite, reverting any DB changes
+    await transaction.rollback();
+});
+
 afterAll(async () => {
+    // // Delete the user created for login test
+    // await sequelize.query('DELETE FROM users WHERE email = "existinguser@gmail.com"');
+    // await sequelize.query('DELETE FROM users WHERE email = "newuser1@gmail.com"');
+
+    // await request(app)
+    //     .delete('/api/v1/users')
+    //     .send({ email: 'existinguser@gmail.com' });
+
     await sequelize.close();
 });
 

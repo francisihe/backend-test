@@ -1,6 +1,7 @@
 import request from 'supertest';
 import app from '../index';
 import sequelize from '../config/db';
+import { runMigrations } from '../config/runMigrations';
 
 describe('Comments', () => {
     let cookie: string;
@@ -9,7 +10,9 @@ describe('Comments', () => {
 
     beforeAll(async () => {
         try {
-            await sequelize.sync({ force: true });
+            // await sequelize.authenticate();
+            await runMigrations();
+            // await sequelize.sync({ force: true });
 
             // Create user in the database
             await request(app)

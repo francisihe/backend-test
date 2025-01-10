@@ -1,18 +1,34 @@
 import request from 'supertest';
 import app from '../index';
 import sequelize from '../config/db';
+import { runMigrations } from '../config/runMigrations';
+import { Transaction } from 'sequelize';
 
-// beforeAll(async () => {
-//     try {
-//         await sequelize.sync({ force: true });
-//     } catch (error) {
-//         console.error('Database sync error:', error);
-//     }
-// });
+let transaction: Transaction;
 
-// afterAll(async () => {
-//     await sequelize.close();
-// });
+beforeAll(async () => {
+    try {
+        // await sequelize.authenticate();
+        await runMigrations();
+        // await sequelize.sync({ force: true });
+    } catch (error) {
+        console.error('Database sync error:', error);
+    }
+});
+
+beforeEach(async () => {
+    // Start a new transaction for each test suite
+    transaction = await sequelize.transaction();
+});
+
+afterEach(async () => {
+    // Rollback the transaction after each test suite, reverting any DB changes
+    await transaction.rollback();
+});
+
+afterAll(async () => {
+    await sequelize.close();
+});
 
 describe('Post Creation Without Auth', () => {
     it('should not create post without auth', async () => {
@@ -155,13 +171,13 @@ describe('Post CRUD operations with postId', () => {
         expect(response.body.status).toBe(true);
     });
 
-it('should not update post without auth', async () => {
-    const response = await request(app)
-        .put(`/api/v1/posts/${postId1}`)
-        .send({ title: 'Updated title', content: 'Updated content' });
+    it('should not update post without auth', async () => {
+        const response = await request(app)
+            .put(`/api/v1/posts/${postId1}`)
+            .send({ title: 'Updated title', content: 'Updated content' });
 
-    expect(response.status).toBe(401);
-});
+        expect(response.status).toBe(401);
+    });
 
     it('should delete post 2', async () => {
         const response = await request(app)
