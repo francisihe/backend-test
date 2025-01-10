@@ -1,0 +1,57 @@
+[
+    {
+        "content": "First comment by User One on Post 1",
+        "postId": 1,
+        "userId": 1
+    },
+    {
+        "content": "Second comment by User One on Post 1",
+        "postId": 1,
+        "userId": 1
+    },
+    {
+        "content": "First comment by User One on Post 2",
+        "postId": 2,
+        "userId": 1
+    },
+    {
+        "content": "First comment by User Two on Post 1",
+        "postId": 3,
+        "userId": 2
+    },
+    {
+        "content": "First comment by User Three on Post 1",
+        "postId": 4,
+        "userId": 3
+    },
+    {
+        "content": "Second comment by User Three on Post 1",
+        "postId": 4,
+        "userId": 3
+    },
+    {
+        "content": "First comment by User Three on Post 2",
+        "postId": 5,
+        "userId": 3
+    },
+    {
+        "content": "First comment by User Four on Post 1",
+        "postId": 6,
+        "userId": 4
+    },
+    {
+        "content": "First comment by User Five on Post 1",
+        "postId": 7,
+        "userId": 5
+    },
+    {
+        "content": "First comment by User Six on Post 1",
+        "postId": 8,
+        "userId": 6
+    },
+    {
+        "content": "First comment by User Seven on Post 1",
+        "postId": 9,
+        "userId": 7
+    }
+]
