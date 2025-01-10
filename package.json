@@ -7,8 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "create-migration:dev": "ts-node scripts/createMigration.ts",
     "create-migration:prod": "node dist/scripts/createMigration.js",
-    "dev": "NODE_ENV=development nodemon --watch '**/*.ts' --exec 'ts-node' index.ts",
-    "build": "tsc",
+    "migration:dev": "ts-node scripts/runMigration.ts",
+    "migration:prod": "node dist/scripts/runMigration.js",
+    "dev": "NODE_ENV=development && npm run migration:dev && nodemon --watch '**/*.ts' --exec 'ts-node' index.ts",
+    "build": "tsc && npm run migration:prod",
     "start": "NODE_ENV=production node dist/index.js"
   },
   "repository": {

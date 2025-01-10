@@ -3,7 +3,7 @@ import sequelize from './config/db';
 import cookieParser from 'cookie-parser';
 import { NODE_ENV, PORT } from './config/constants';
 
-import { runMigrations } from './config/runMigrations';
+// import { runMigrations } from './config/runMigrations';
 
 import userRouter from './routes/userRouter';
 import postRouter from './routes/postRouter';
@@ -29,8 +29,8 @@ async function startServer() {
         await sequelize.authenticate();
         console.log('Database connection has been established successfully...');
 
-        // Run migrations
-        await runMigrations();
+        // Run migrations -- Moved migrations to run during build in prod, and in scripts/runMigration.ts in dev to avoid running migrations on every server start
+        // await runMigrations();
         
         app.listen(PORT, () => {
             console.log(`Server environment is ${NODE_ENV}`);

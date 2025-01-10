@@ -11,6 +11,11 @@ const umzug = new Umzug({
 });
 
 export const runMigrations = async () => {
-    await umzug.up(); // Run all pending migrations
-    console.log('Migrations have been applied successfully.');
+    try {
+        await umzug.up(); // Run all pending migrations
+        console.log('Migrations have been applied successfully.');
+    } catch (error) {
+        console.error('Error running migrations:', error);
+        throw error;
+    }
 };
