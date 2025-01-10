@@ -9,6 +9,6 @@ export const DB_PORT: number = process.env.DB_PORT ? parseInt(process.env.DB_POR
 
 export const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-export const NODE_ENV: string = process.env.NODE_ENV || 'production';
+export const NODE_ENV: string = process.env.NODE_ENV || 'development';
 
 export const JWT_SECRET: string = process.env.JWT_SECRET || '';

@@ -5,11 +5,14 @@ import { JWT_SECRET } from '../../config/constants';
 
 
 export const verifyUser = (req: Request, res: Response, next: NextFunction): void => {
-    const token = req.cookies?.token;
+
+    const cookieToken = req.cookies?.token;
+    const headerToken = req.headers.authorization?.split(' ')[1];
+    const token = cookieToken || headerToken;
 
     if (!token) {
         res.status(401).json({
-            message: 'Unauthorized. No token provided.'
+            message: 'Unauthorized. No token provided. Please login.'
         });
         return;
     }
