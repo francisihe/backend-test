@@ -5,7 +5,7 @@
 
 This is a quick overview on how I handled and recommend handling migrations in the Rise Backend Test API. 
 
-This project utilizes **Sequelize** and **Umzug** for handling migrations in a PostgreSQL database.
+This project utilizes **Sequelize** and **Umzug** for handling migrations in a PostgreSQL database. The actual management is carried out by the `config/runMigrations.ts` file, while the scripts called in the package.json do so by calling the `scripts/runMigrations.ts` but is ultimately handled by the config file.
 
 ### External Resource
 - [Sequelize](https://sequelize.org): This is the ORM used in the project. I used the PostgreSQL dialect.
@@ -69,3 +69,37 @@ npm run migration:prod
 
 If successful, you can start your server.
 If errors are thrown, you should troubleshoot before restarting the server.
+
+
+### Example Migration Files
+
+- `20250109181443-initial-create-posts-table.js`: This migration creates the `Posts` table.
+- `20250109181543-initial-create-comments-table.js`: This migration creates the `Comments` table.
+- `20250109181343-initial-create-users-table.js`: This migration creates the `Users` table.
+
+## Migration Files
+
+Each migration file contains two main functions:
+
+1. **up**: This function defines the changes to be applied to the database schema. It is executed when the migration is run.
+2. **down**: This function defines how to revert the changes made by the `up` function. It is executed when the migration is rolled back.
+
+### Example Migration File Structure
+
+```
+const { Sequelize } = require('sequelize');
+async function up({ context: queryInterface }) {
+await queryInterface.createTable('TableName', {
+id: {
+type: Sequelize.INTEGER,
+autoIncrement: true,
+primaryKey: true,
+},
+// Other columns...
+});
+}
+async function down({ context: queryInterface }) {
+await queryInterface.dropTable('TableName');
+}
+module.exports = { up, down };
+```
