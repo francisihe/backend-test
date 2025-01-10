@@ -7,6 +7,10 @@ async function up({ context: queryInterface }) {
             autoIncrement: true,
             primaryKey: true,
         },
+        title: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
         content: {
             type: Sequelize.STRING,
             allowNull: false,
