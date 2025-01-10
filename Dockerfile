@@ -2,7 +2,7 @@
 FROM node:18-slim
 
 # Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -12,6 +12,9 @@ RUN npm install
 
 # Bundle app source code
 COPY . .
+
+# Run Build 
+RUN npm run build
 
 # Expose the port on which your app will run
 EXPOSE 8080
