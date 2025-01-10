@@ -103,9 +103,22 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
 
 export const getUserPosts = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { userId } = req.params; 
+        const { userId } = req.params;
+        // const user = await User.findByPk(userId);
 
-        const user = await User.findByPk(userId);
+        const loggedInUserId = req.user?.id;
+        const targetUserId = userId || loggedInUserId;
+
+        // If no userId is provided in the request params and no logged-in user, it will return an error
+        if (!targetUserId) {
+            res.status(400).json({
+                status: false,
+                message: 'User not authenticated or userId not provided',
+            });
+            return;
+        }
+
+        const user = await User.findByPk(targetUserId);
 
         if (!user) {
             res.status(404).json({

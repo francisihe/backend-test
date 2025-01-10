@@ -143,3 +143,39 @@ export const validateAddComment = (req: Request, res: Response, next: NextFuncti
     next();
 
 }
+
+export const validateGetComments = (req: Request, res: Response, next: NextFunction) => {
+    const schema = Joi.object({
+        postId: Joi.number().integer().positive().required()
+    });
+
+    const { error } = schema.validate(req.params);
+    if (error) {
+        res.status(400).json({
+            status: false,
+            message: error.details[0].message
+        });
+        return;
+    };
+
+    next();
+
+}
+
+export const validateGetUserComments = (req: Request, res: Response, next: NextFunction) => {
+    const schema = Joi.object({
+        userId: Joi.number().integer().positive().optional()
+    });
+
+    const { error } = schema.validate(req.params);
+    if (error) {
+        res.status(400).json({
+            status: false,
+            message: error.details[0].message
+        });
+        return;
+    };
+
+    next();
+
+}

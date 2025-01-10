@@ -85,8 +85,20 @@ export const getCommentsByUser = async (req: Request, res: Response): Promise<vo
     try {
         const { userId } = req.params;
 
+        const loggedInUserId = req.user?.id;
+        const targetUserId = userId || loggedInUserId;
+
+        // If no userId is provided in the request params and no logged-in user, it will return an error
+        if (!targetUserId) {
+            res.status(400).json({
+                status: false,
+                message: 'User not authenticated or userId not provided',
+            });
+            return;
+        }
+
         const comments = await Comment.findAll({
-            where: { userId },
+            where: { userId: targetUserId },
         });
 
         if (!comments.length) {
