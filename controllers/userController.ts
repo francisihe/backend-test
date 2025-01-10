@@ -103,10 +103,10 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
 
 export const getUserPosts = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.params; 
+        const { userId } = req.params; 
 
-        const user = await User.findByPk(id);
-        
+        const user = await User.findByPk(userId);
+
         if (!user) {
             res.status(404).json({
                 status: false,
@@ -116,7 +116,7 @@ export const getUserPosts = async (req: Request, res: Response): Promise<void> =
         }
 
         const posts = await Post.findAll({
-            where: { userId: id },
+            where: { userId: userId },
         });
 
         if (!posts.length) {
