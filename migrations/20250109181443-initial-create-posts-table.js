@@ -1,21 +1,21 @@
 const { Sequelize } = require('sequelize');
 
 async function up({ context: queryInterface }) {
-    await queryInterface.createTable('Comments', {
+    await queryInterface.createTable('Posts', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        body: {
+        content: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        postId: {
+        userId: {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: {
-                model: 'Posts', // Ensure this matches the table name
+                model: 'Users', // Ensure this matches the table name
                 key: 'id',
             },
         },
@@ -33,7 +33,7 @@ async function up({ context: queryInterface }) {
 }
 
 async function down({ context: queryInterface }) {
-    await queryInterface.dropTable('Comments');
+    await queryInterface.dropTable('Posts');
 }
 
 module.exports = { up, down };

@@ -1,28 +1,36 @@
 const { Sequelize } = require('sequelize');
 
 async function up({ context: queryInterface }) {
-    await queryInterface.createTable('Posts', {
+    await queryInterface.createTable('Comments', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        body: {
+        content: {
             type: Sequelize.STRING,
             allowNull: false,
+        },
+        postId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Posts',
+                key: 'id',
+            },
         },
         userId: {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: {
-                model: 'Users', // Ensure this matches the table name
+                model: 'Users',
                 key: 'id',
             },
         },
         createdAt: {
             allowNull: false,
             type: Sequelize.DATE,
-            defaultValue: Sequelize.fn('NOW'), // Use NOW() for default value
+            defaultValue: Sequelize.fn('NOW'),
         },
         updatedAt: {
             allowNull: false,
@@ -33,7 +41,7 @@ async function up({ context: queryInterface }) {
 }
 
 async function down({ context: queryInterface }) {
-    await queryInterface.dropTable('Posts');
+    await queryInterface.dropTable('Comments');
 }
 
 module.exports = { up, down };
