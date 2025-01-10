@@ -9,6 +9,7 @@ import userRouter from './routes/userRouter';
 import postRouter from './routes/postRouter';
 import commentRouter from './routes/commentRouter';
 import healthRouter from './routes/healthRouter';
+import customRouter from './routes/customRouter';
 import { verifyUser } from './middleware/authentication/verifyUser';
 
 const app = express();
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/health', healthRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/custom-query', customRouter);
 
 app.use('/api/v1/*', verifyUser);
 app.use('/api/v1/posts', postRouter);
@@ -37,7 +39,7 @@ async function startServer() {
 
         if (NODE_ENV !== 'test') {
             app.listen(PORT, () => {
-                console.info(`Server environment is ${process.env.NODE_ENV}`);
+                console.info(`Server environment is ${NODE_ENV}`);
                 console.info(`Server is running on http://localhost:${PORT}`);
             });
         }
