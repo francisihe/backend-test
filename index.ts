@@ -34,11 +34,13 @@ async function startServer() {
 
         // Run migrations -- Moved migrations to run during build in prod, and in scripts/runMigration.ts in dev to avoid running migrations on every server start
         // await runMigrations();
-        
-        app.listen(PORT, () => {
-            console.info(`Server environment is ${NODE_ENV}`);
-            console.info(`Server is running on http://localhost:${PORT}`);
-        });
+
+        if (NODE_ENV !== 'test') {
+            app.listen(PORT, () => {
+                console.info(`Server environment is ${process.env.NODE_ENV}`);
+                console.info(`Server is running on http://localhost:${PORT}`);
+            });
+        }
 
     } catch (error) {
         console.error('Unable to connect to the database, exiting server:', error);
@@ -47,3 +49,4 @@ async function startServer() {
 
 export default app;
 startServer();
+
