@@ -107,3 +107,11 @@ Some of these were also used in the CI/CD pipeline. I deployed this to **Google 
     ```
     npm run dev
     ```
+
+
+## Running Tests
+You can run the individual tests in the `tests` directory, alternatively, run
+
+```
+npm run test
+```
