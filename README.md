@@ -24,6 +24,14 @@ I have ensured proper documentation of the different parts of the project, and f
 - [DEPLOYMENT](./docs/DEPLOYMENT.md): This shows the indepth deployment steps for Google Cloud Run and covers that of Render as well
 - [MIGRATIONS](./docs/MIGRATIONS.md): Migrations are used extensively both in `development` and `production` environments within the codebase. This highlights the migration dependencies, custom migration files, custom script, templates, file structure and commands to run migrations either in dev or prod.
 
+### Deployment Previews
+
+Image Showing Preview Of Remote Database, Accessed using PgAdmin4
+![Image Showing Preview Of Remote Database, Accessed using PgAdmin4](<images/Screenshot from 2025-01-11 01-34-03.png>) 
+
+Image Showing Logs of Deployed API Server on Google Cloud Run
+![Image Showing Logs of Deployed API Server on Google Cloud Run](<images/Screenshot from 2025-01-10 23-45-47.png>) 
+
 ## Mini Project Structure
 The files within the repo are grouped into easily understandable directories as follows:
 

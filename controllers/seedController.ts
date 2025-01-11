@@ -11,10 +11,18 @@ export const seedDatabase = async (req: Request, res: Response): Promise<void> =
         await Post.destroy({ where: {} });
         await User.destroy({ where: {} });
 
-        // Read the JSON files
-        const usersData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seed', 'users.json'), 'utf-8'));
-        const postsData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seed', 'posts.json'), 'utf-8'));
-        const commentsData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seed', 'comments.json'), 'utf-8'));
+        // Updated to use path.resolve instead of path.join to avoid issues with different environments
+        const usersFilePath = path.resolve(__dirname, '..', 'seed', 'users.json');
+        const postsFilePath = path.resolve(__dirname, '..', 'seed', 'posts.json');
+        const commentsFilePath = path.resolve(__dirname, '..', 'seed', 'comments.json');
+
+        if (!fs.existsSync(usersFilePath) || !fs.existsSync(postsFilePath) || !fs.existsSync(commentsFilePath)) {
+            throw new Error('One or more seed files are missing.');
+        }
+
+        const usersData = JSON.parse(fs.readFileSync(usersFilePath, 'utf-8'));
+        const postsData = JSON.parse(fs.readFileSync(postsFilePath, 'utf-8'));
+        const commentsData = JSON.parse(fs.readFileSync(commentsFilePath, 'utf-8'));
 
         await User.bulkCreate(usersData, { validate: true });
         await Post.bulkCreate(postsData, { validate: true });
