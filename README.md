@@ -9,7 +9,7 @@ The prompt for the assessment can be found here: [Project Assessment](./testProm
 
 - Repository: https://github.com/francisihe/backend-test (GitHub)
 - Hosted API URL: https://risevest-backend-test-899349118879.us-central1.run.app/ (Google Cloud Run)
-- Postman Collection Public URL: 
+- Postman Collection Public URL: https://documenter.getpostman.com/view/30177617/2sAYQWJYHX
 
 _The database is a free Render PostgreSQL database_
 
